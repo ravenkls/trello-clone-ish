@@ -1,19 +1,13 @@
-import * as config from "config";
-import * as express from "express";
 import { createConnection } from "typeorm";
-import { typeormConfig } from "../typeormConfig";
+import typeormConfig from "../typeormConfig";
+import { app } from "./app";
 
-export const startServer = async () => {
-  const serverConfig = config.get("server");
+if (process.env.NODE_ENV === "development") require("dotenv").config();
 
+(async () => {
   await createConnection(typeormConfig);
-  const app = express();
+})();
 
-  app.get("/", (res: express.Response) => {
-    res.status(200).send();
-  });
-
-  app.listen(serverConfig.port, () =>
-    console.log(`Express server listening on port ${serverConfig.port}`),
-  );
-};
+app.listen(process.env.SERVER_PORT, () =>
+  console.log(`Express app listening on port ${process.env.SERVER_PORT}`),
+);
