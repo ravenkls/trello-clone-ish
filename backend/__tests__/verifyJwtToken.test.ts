@@ -8,11 +8,8 @@ const INVALID_JWT_TOKEN =
 
 let mockReq: any = {};
 let mockRes: any = {
-  status: jest.fn(() => {
-    return {
-      send: jest.fn(),
-    };
-  }),
+  status: jest.fn().mockReturnThis(),
+  send: jest.fn(),
 };
 let mockNextFn: any = jest.fn();
 
@@ -28,7 +25,7 @@ test("Request header does not contain JWT", () => {
   verifyJwtToken(mockReq, mockRes, mockNextFn);
 
   expect(mockRes.status).toHaveBeenCalledWith(401);
-  expect(mockRes.status().send).toHaveBeenCalled;
+  expect(mockRes.status().send).toHaveBeenCalled();
 });
 
 test("Request header contains valid JWT", () => {
@@ -40,11 +37,11 @@ test("Request header contains valid JWT", () => {
 
   verifyJwtToken(mockReq, mockRes, mockNextFn);
 
-  expect(jwt.verify).toBeCalledWith(
+  expect(jwt.verify).toHaveBeenCalledWith(
     mockReq.headers.authorization,
     process.env.JWT_SECRETKEY,
   );
-  expect(mockNextFn).toBeCalled();
+  expect(mockNextFn).toHaveBeenCalled();
 });
 
 test("Request header contains invalid JWT", () => {
@@ -56,10 +53,10 @@ test("Request header contains invalid JWT", () => {
 
   verifyJwtToken(mockReq, mockRes, mockNextFn);
 
-  expect(jwt.verify).toBeCalledWith(
+  expect(jwt.verify).toHaveBeenCalledWith(
     mockReq.headers.authorization,
     process.env.JWT_SECRETKEY,
   );
   expect(mockRes.status).toHaveBeenCalledWith(401);
-  expect(mockRes.status().send).toHaveBeenCalled;
+  expect(mockRes.status().send).toHaveBeenCalled();
 });

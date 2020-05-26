@@ -9,5 +9,8 @@ test("hashPassword()", async () => {
   jest.spyOn(bcrypt, "hash");
   await user.hashPassword();
 
-  expect(bcrypt.hash).toBeCalledWith("cantthinkofagoodpassword", user.salt);
+  expect(bcrypt.hash).toHaveBeenCalledWith(
+    "cantthinkofagoodpassword",
+    user.salt,
+  );
 });
