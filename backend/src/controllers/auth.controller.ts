@@ -2,39 +2,12 @@ import express = require("express");
 import Joi = require("@hapi/joi");
 import bcrypt = require("bcryptjs");
 import jwt = require("jsonwebtoken");
-import config = require("config");
+import { validateAuthCredentials } from "../utils/validateAuthCreds";
 
 import { User } from "../entities/User.entity";
 import { verifyJwtToken } from "../utils/verifyJwtToken";
 
 const authController: express.Router = express.Router();
-
-const authCredentialsSchema: Joi.ObjectSchema = Joi.object({
-  username: Joi.string().required().messages({
-    "string.base": "Invalid type, username must be a string",
-    "string.empty": "Please enter your username",
-  }),
-  password: Joi.string().required().messages({
-    "string.base": "Invalid type, password must be a string",
-    "string.empty": "Please enter your password",
-  }),
-});
-
-const validateAuthCredentials = (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) => {
-  if (req.method !== "POST") {
-    return;
-  }
-  const { error } = authCredentialsSchema.validate(req.body);
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-
-  next();
-};
 
 authController.post(
   "/signup",
