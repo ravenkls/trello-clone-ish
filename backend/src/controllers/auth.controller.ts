@@ -59,7 +59,7 @@ authController.post(
       { userId: user.id, username: user.username },
       process.env.JWT_SECRETKEY,
       {
-        expiresIn: "60s",
+        expiresIn: "600s",
       },
     );
     res.status(200).json({ accessToken: accessToken });
