@@ -1,8 +1,8 @@
 import express = require("express");
-import Joi = require("@hapi/joi");
+import { validateDto } from "../utils/validateDto";
+import { authCredentialsDto } from "../DTO/authCredentials.dto";
 import bcrypt = require("bcryptjs");
 import jwt = require("jsonwebtoken");
-import { validateAuthCredentials } from "../utils/validateAuthCreds";
 
 import { User } from "../entities/User.entity";
 import { verifyJwtToken } from "../utils/verifyJwtToken";
@@ -11,7 +11,7 @@ const authController: express.Router = express.Router();
 
 authController.post(
   "/signup",
-  validateAuthCredentials,
+  validateDto(authCredentialsDto),
   async (
     req: express.Request,
     res: express.Response,
@@ -36,7 +36,7 @@ authController.post(
 
 authController.post(
   "/signin",
-  validateAuthCredentials,
+  validateDto(authCredentialsDto),
   async (
     req: express.Request,
     res: express.Response,

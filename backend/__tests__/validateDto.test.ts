@@ -1,4 +1,5 @@
-import { validateAuthCredentials } from "../src/utils/validateAuthCreds";
+import { validateDto } from "../src/utils/validateDto";
+import { authCredentialsDto } from "../src/DTO/authCredentials.dto";
 
 let mockReq: any = {};
 let mockRes: any = {
@@ -7,10 +8,12 @@ let mockRes: any = {
 };
 let mockNextFn: any = jest.fn();
 
-const VALID_USERNAME = "amrittalwar";
-const VALID_PASSWORD = "veryvalidpassword1999";
+const VALID_USERNAME = "amrittalwar1999";
+const VALID_PASSWORD = "iamtypingapassword";
 
-describe("Post body contains valid auth creds structure", () => {
+const injectableValidateDtoFn = validateDto(authCredentialsDto);
+
+describe("Post body contains valid dto", () => {
   mockReq = {
     body: {
       username: VALID_USERNAME,
@@ -18,14 +21,14 @@ describe("Post body contains valid auth creds structure", () => {
     },
   };
 
-  validateAuthCredentials(mockReq, mockReq, mockNextFn);
+  injectableValidateDtoFn(mockReq, mockReq, mockNextFn);
 
   test("Expect next function to be called", () => {
     expect(mockNextFn).toHaveBeenCalled();
   });
 });
 
-describe("Post body contains no username and password", () => {
+describe("Post body contains invalid dto", () => {
   mockReq = {
     body: {
       username: "",
@@ -33,7 +36,7 @@ describe("Post body contains no username and password", () => {
     },
   };
 
-  validateAuthCredentials(mockReq, mockRes, mockNextFn);
+  injectableValidateDtoFn(mockReq, mockRes, mockNextFn);
 
   test("Expect a response with status 400 to be sent", () => {
     expect(mockRes.status).toHaveBeenCalledWith(400);
