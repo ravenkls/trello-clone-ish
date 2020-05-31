@@ -1,6 +1,6 @@
 import express = require("express");
 import jwt = require("jsonwebtoken");
-import config = require("config");
+import jwtDecode = require("jwt-decode");
 
 export const verifyJwtToken = (
   req: express.Request,
@@ -16,5 +16,7 @@ export const verifyJwtToken = (
     return res.status(401).send("Invalid JWT");
   }
 
+  // Pass decoded jwt into req body to be used by jwt protected routes
+  req.body.jwtDecode = jwtDecode(token);
   next();
 };

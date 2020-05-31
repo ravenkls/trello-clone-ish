@@ -30,7 +30,10 @@ authController.post(
       }
     }
 
-    return res.status(201).send("user creation successful");
+    return res.status(201).json({
+      userId: `${user.id}`,
+      username: `${user.username}`,
+    });
   },
 );
 
