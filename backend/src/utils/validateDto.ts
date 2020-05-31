@@ -7,7 +7,7 @@ export const validateDto = (DTO: Joi.ObjectSchema) => {
     req: express.Request,
     res: express.Response,
     next: express.NextFunction,
-  ) => {
+  ): express.Response | void => {
     const { error } = DTO.validate(req.body, {
       abortEarly: false,
     });

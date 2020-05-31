@@ -6,7 +6,7 @@ export const verifyJwtToken = (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,
-) => {
+): express.Response | void => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Please provide your JWT");
 

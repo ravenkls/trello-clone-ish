@@ -11,7 +11,10 @@ taskController.post(
   "/create",
   validateDto(createTaskDto),
   verifyJwtToken,
-  async (req: express.Request, res: express.Response) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+  ): Promise<express.Response> => {
     const task: Task = Task.create();
 
     task.title = req.body.title;

@@ -72,8 +72,8 @@ authController.post(
 authController.get(
   "/signin",
   verifyJwtToken,
-  (req: express.Request, res: express.Response) => {
-    res.status(200).send("hooray you have a valid jwt");
+  (req: express.Request, res: express.Response): express.Response => {
+    return res.status(200).send("hooray you have a valid jwt");
   },
 );
 
