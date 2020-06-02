@@ -1,5 +1,5 @@
-import { validateDto } from "../src/utils/validateDto";
-import { authCredentialsDto } from "../src/DTO/authCredentials.dto";
+import { validateDto } from "../src/middlewares/validateDto";
+import { authCredentialsDto } from "../src/Users/userCredentials.dto";
 
 let mockReq: any = {};
 let mockRes: any = {

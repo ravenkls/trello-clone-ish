@@ -1,4 +1,4 @@
-import { verifyJwtToken } from "../src/utils/verifyJwtToken";
+import { verifyJwtToken } from "../src/middlewares/verifyJwtToken";
 import jwt = require("jsonwebtoken");
 
 const VALID_JWT_TOKEN =
@@ -33,6 +33,7 @@ test("Request header contains valid JWT", () => {
     headers: {
       authorization: `${VALID_JWT_TOKEN}`,
     },
+    body: {},
   };
 
   verifyJwtToken(mockReq, mockRes, mockNextFn);

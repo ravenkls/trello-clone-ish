@@ -1,15 +1,15 @@
 import express = require("express");
-import { validateDto } from "../utils/validateDto";
-import { authCredentialsDto } from "../DTO/authCredentials.dto";
+import { validateDto } from "../middlewares/validateDto";
+import { authCredentialsDto } from "./userCredentials.dto";
 import bcrypt = require("bcryptjs");
 import jwt = require("jsonwebtoken");
 
-import { User } from "../entities/User.entity";
-import { verifyJwtToken } from "../utils/verifyJwtToken";
+import { User } from "./User.entity";
+import { verifyJwtToken } from "../middlewares/verifyJwtToken";
 
-const authController: express.Router = express.Router();
+const UserController: express.Router = express.Router();
 
-authController.post(
+UserController.post(
   "/signup",
   validateDto(authCredentialsDto),
   async (
@@ -37,7 +37,7 @@ authController.post(
   },
 );
 
-authController.post(
+UserController.post(
   "/signin",
   validateDto(authCredentialsDto),
   async (
@@ -69,7 +69,7 @@ authController.post(
   },
 );
 
-authController.get(
+UserController.get(
   "/signin",
   verifyJwtToken,
   (req: express.Request, res: express.Response): express.Response => {
@@ -77,4 +77,4 @@ authController.get(
   },
 );
 
-export { authController };
+export { UserController };

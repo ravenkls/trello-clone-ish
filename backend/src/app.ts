@@ -1,13 +1,14 @@
 import express = require("express");
 import bodyParser = require("body-parser");
-import { authController } from "./controllers/auth.controller";
-import { taskController } from "./controllers/task.controller";
+import { UserController } from "./Users/User.controller";
+import { TasksController } from "./Tasks/Task.controller";
+import { verifyJwtToken } from "./middlewares/verifyJwtToken";
 
 const app = express();
 
 app.use(bodyParser.json());
 
-app.use("/auth", authController);
-app.use("/tasks", taskController);
+app.use("/users", UserController);
+app.use("/tasks", verifyJwtToken, TasksController);
 
 export { app };

@@ -7,8 +7,8 @@ import {
   BeforeInsert,
   Unique,
 } from "typeorm";
-import bcrypt = require("bcryptjs")
-import { Task } from "./Task.entity";
+import bcrypt = require("bcryptjs");
+import { Task } from "../Tasks/Task.entity";
 
 @Entity()
 @Unique(["username"])
