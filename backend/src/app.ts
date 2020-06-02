@@ -4,7 +4,7 @@ import { UserController } from "./Users/User.controller";
 import { TasksController } from "./Tasks/Task.controller";
 import { verifyJwtToken } from "./middlewares/verifyJwtToken";
 
-const app = express();
+const app: express.Application = express();
 
 app.use(bodyParser.json());
 
