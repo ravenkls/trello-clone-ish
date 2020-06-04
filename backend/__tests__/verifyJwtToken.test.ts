@@ -1,10 +1,20 @@
 import { verifyJwtToken } from "../src/middlewares/verifyJwtToken";
 import jwt = require("jsonwebtoken");
 
-const VALID_JWT_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.fprDDa-zFOlNK260Yd8uA_JEOLJ9ctF3NmFz2IdoUFo";
-const INVALID_JWT_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyf.fprDDa-zFOlNK260Yd8uA_JEOLJ9ctF3NmFz2IdoUFo";
+const VALID_JWT_TOKEN = jwt.sign(
+  { userId: 1, username: "amrit" },
+  process.env.JWT_SECRETKEY,
+  {
+    expiresIn: "600s",
+  },
+);
+const INVALID_JWT_TOKEN = jwt.sign(
+  { userId: 1, username: "amrit" },
+  process.env.JWT_SECRETKEY,
+  {
+    expiresIn: "0s",
+  },
+);
 
 let mockReq: any = {};
 let mockRes: any = {
@@ -12,8 +22,6 @@ let mockRes: any = {
   send: jest.fn(),
 };
 let mockNextFn: any = jest.fn();
-
-jest.spyOn(jwt, "verify");
 
 test("Request header does not contain JWT", () => {
   mockReq = {
@@ -36,12 +44,19 @@ test("Request header contains valid JWT", () => {
     body: {},
   };
 
+  jest.spyOn(jwt, "verify");
   verifyJwtToken(mockReq, mockRes, mockNextFn);
 
   expect(jwt.verify).toHaveBeenCalledWith(
     mockReq.headers.authorization,
     process.env.JWT_SECRETKEY,
   );
+
+  expect(mockReq.jwtDecode).toEqual({
+    userId: 1,
+    username: "amrit",
+  });
+
   expect(mockNextFn).toHaveBeenCalled();
 });
 

@@ -1,6 +1,10 @@
 import express = require("express");
 import jwt = require("jsonwebtoken");
-import jwtDecode = require("jwt-decode");
+
+export interface jwtDecodeInterface {
+  userId: number;
+  username: string;
+}
 
 export const verifyJwtToken = (
   req: express.Request,
@@ -11,12 +15,13 @@ export const verifyJwtToken = (
   if (!token) return res.status(401).send("Please provide your JWT");
 
   try {
-    jwt.verify(token, process.env.JWT_SECRETKEY);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRETKEY);
+    req.jwtDecode = {
+      userId: decoded.userId,
+      username: decoded.username,
+    };
+    next();
   } catch (err) {
     return res.status(401).send("Invalid JWT");
   }
-
-  // Pass decoded jwt into req body to be used by jwt protected routes
-  req.body.jwtDecode = jwtDecode(token);
-  next();
 };

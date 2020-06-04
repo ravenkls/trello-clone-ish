@@ -15,7 +15,7 @@ TasksController.post(
     task.title = req.body.title;
     task.description = req.body.description;
     task.status = TaskStatus.OPEN;
-    task.userId = req.body.jwtDecode.userId;
+    task.userId = req.jwtDecode.userId;
 
     await task.save();
 
