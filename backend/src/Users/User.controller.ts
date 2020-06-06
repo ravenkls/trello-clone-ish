@@ -1,17 +1,18 @@
 import express = require("express");
 import { validateDto } from "../middlewares/validateDto";
-import { authCredentialsDto } from "./userCredentials.dto";
+import { createUserDto } from "./User.dto";
 import bcrypt = require("bcryptjs");
 import jwt = require("jsonwebtoken");
 
 import { User } from "./User.entity";
 import { verifyJwtToken } from "../middlewares/verifyJwtToken";
+import { getConnection } from "typeorm";
 
 const UserController: express.Router = express.Router();
 
 UserController.post(
   "/signup",
-  validateDto(authCredentialsDto),
+  validateDto(createUserDto),
   async (
     req: express.Request,
     res: express.Response,
@@ -30,16 +31,16 @@ UserController.post(
       }
     }
 
-    return res.status(201).json({
-      userId: `${user.id}`,
-      username: `${user.username}`,
-    });
+    delete user.password;
+    delete user.salt;
+
+    return res.status(201).json(user);
   },
 );
 
 UserController.post(
   "/signin",
-  validateDto(authCredentialsDto),
+  validateDto(createUserDto),
   async (
     req: express.Request,
     res: express.Response,
@@ -73,7 +74,32 @@ UserController.get(
   "/signin",
   verifyJwtToken,
   (req: express.Request, res: express.Response): express.Response => {
-    return res.status(200).send("hooray you have a valid jwt");
+    return res.status(200).send();
+  },
+);
+
+UserController.get(
+  "/:id",
+  verifyJwtToken,
+  async (
+    req: express.Request,
+    res: express.Response,
+  ): Promise<express.Response> => {
+    const user: User = await getConnection()
+      .createQueryBuilder()
+      .select("user")
+      .from(User, "user")
+      .where("user.id = :id", { id: parseInt(req.params.id) })
+      .leftJoinAndSelect("user.tasks", "task")
+      .getOne();
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    delete user.password;
+    delete user.salt;
+
+    return res.status(200).json(user);
   },
 );
 
