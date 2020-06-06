@@ -26,6 +26,7 @@ UserController.post(
     try {
       await user.save();
     } catch (err) {
+      console.log(err);
       if (err.code === "23505") {
         return res.status(409).send("user already exists");
       }
@@ -91,7 +92,9 @@ UserController.get(
       .from(User, "user")
       .where("user.id = :id", { id: parseInt(req.params.id) })
       .leftJoinAndSelect("user.tasks", "task")
+      .leftJoinAndSelect("user.teams", "team")
       .getOne();
+
     if (!user) {
       return res.status(404).send();
     }

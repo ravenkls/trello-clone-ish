@@ -4,6 +4,7 @@ import { TaskStatus } from "./TaskStatus.enum";
 import { validateDto } from "../middlewares/validateDto";
 import { updateTaskDto, createTaskDto } from "./Task.dto";
 import { getConnection } from "typeorm";
+import { User } from "../Users/User.entity";
 
 const TasksController: express.Router = express.Router();
 
@@ -19,9 +20,12 @@ TasksController.post(
     task.title = req.body.title;
     task.description = req.body.description;
     task.status = TaskStatus.OPEN;
-    task.userId = req.jwtDecode.userId;
+    task.user = await User.findOne({ id: req.jwtDecode.userId });
 
     await task.save();
+
+    delete task.user.password;
+    delete task.user.salt;
 
     return res.status(201).json(task);
   },
@@ -34,7 +38,9 @@ TasksController.get(
     res: express.Response,
   ): Promise<express.Response> => {
     const task: Task = await Task.findOne({ id: parseInt(req.params.id) });
-
+    if (!task) {
+      return res.status(404).send();
+    }
     delete task.user.password;
     delete task.user.salt;
 
