@@ -4,6 +4,7 @@ import {
   Column,
   BaseEntity,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { User } from "../Users/User.entity";
 import { TaskStatus } from "./TaskStatus.enum";
@@ -21,9 +22,9 @@ export class Task extends BaseEntity {
   @Column()
   status: TaskStatus;
 
-  @ManyToOne((type) => User, (user) => user.tasks, { eager: false })
-  user: User;
-
   @Column()
   userId: number;
+  @ManyToOne(() => User, (user) => user.tasks, { eager: true })
+  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  user: User;
 }
