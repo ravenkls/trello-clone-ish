@@ -6,9 +6,14 @@ import {
   OneToMany,
   BeforeInsert,
   Unique,
+  ManyToOne,
+  JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import bcrypt = require("bcryptjs");
 import { Task } from "../Tasks/Task.entity";
+import { Team } from "../Teams/Team.entity";
 
 @Entity()
 @Unique(["username"])
@@ -27,6 +32,10 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
+
+  @ManyToMany((type) => Team, (team) => team.users)
+  @JoinTable()
+  teams: Team[];
 
   @BeforeInsert()
   async hashPassword() {
