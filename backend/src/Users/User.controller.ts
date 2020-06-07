@@ -17,11 +17,12 @@ UserController.post(
     req: express.Request,
     res: express.Response,
   ): Promise<express.Response> => {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     const user: User = User.create();
     user.username = username;
     user.password = password;
+    user.email = email;
     user.salt = await bcrypt.genSalt();
     try {
       await user.save();
