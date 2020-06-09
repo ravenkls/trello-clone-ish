@@ -69,7 +69,6 @@ UserController.post(
 
 UserController.get(
   "/signin",
-  verifyLoginSession,
   (req: express.Request, res: express.Response): express.Response => {
     return res.status(200).send();
   },
@@ -77,7 +76,6 @@ UserController.get(
 
 UserController.get(
   "/:id",
-  verifyLoginSession,
   async (
     req: express.Request,
     res: express.Response,
