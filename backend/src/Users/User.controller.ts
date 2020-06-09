@@ -1,6 +1,6 @@
 import express = require("express");
 import { validateDto } from "../middlewares/validateDto";
-import { createUserDto } from "./User.dto";
+import { createUserDto, signinDto } from "./User.dto";
 import bcrypt = require("bcryptjs");
 import { verifyLoginSession } from "../middlewares/verifyLoginSession";
 
@@ -41,6 +41,7 @@ UserController.post(
 
 UserController.post(
   "/signin",
+  validateDto(signinDto),
   async (
     req: express.Request,
     res: express.Response,
