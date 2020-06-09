@@ -17,10 +17,11 @@ TasksController.post(
   ): Promise<express.Response> => {
     const task: Task = Task.create();
 
+    console.log(req.session);
     task.title = req.body.title;
     task.description = req.body.description;
     task.status = TaskStatus.OPEN;
-    task.user = await User.findOne({ id: req.jwtDecode.userId });
+    task.user = await User.findOne({ id: req.session.userId });
 
     await task.save();
 
@@ -37,7 +38,7 @@ TasksController.get(
     req: express.Request,
     res: express.Response,
   ): Promise<express.Response> => {
-    const task: Task = await Task.findOne({ id: parseInt(req.params.id) });
+    const task: Task = await Task.findOne({ id: parseInt(req.session.userId) });
     if (!task) {
       return res.status(404).send();
     }

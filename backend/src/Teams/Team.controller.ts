@@ -15,7 +15,7 @@ TeamController.post(
       .createQueryBuilder()
       .select("user")
       .from(User, "user")
-      .where("user.id = :id", { id: req.jwtDecode.userId })
+      .where("user.id = :id", { id: req.session.userId })
       .leftJoinAndSelect("user.teams", "team")
       .getOne();
 

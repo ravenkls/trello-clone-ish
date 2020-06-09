@@ -2,10 +2,9 @@ import express = require("express");
 import { validateDto } from "../middlewares/validateDto";
 import { createUserDto } from "./User.dto";
 import bcrypt = require("bcryptjs");
-import jwt = require("jsonwebtoken");
+import { verifyLoginSession } from "../middlewares/verifyLoginSession";
 
 import { User } from "./User.entity";
-import { verifyJwtToken } from "../middlewares/verifyJwtToken";
 import { getConnection } from "typeorm";
 
 const UserController: express.Router = express.Router();
@@ -61,6 +60,7 @@ UserController.post(
     }
 
     req.session.alive = true;
+    req.session.userId = user.id;
 
     return res.status(200).send();
   },
@@ -68,15 +68,15 @@ UserController.post(
 
 UserController.get(
   "/signin",
+  verifyLoginSession,
   (req: express.Request, res: express.Response): express.Response => {
-    req.session.alive ? res.status(200) : res.status(401);
-    return res.send();
+    return res.status(200).send();
   },
 );
 
 UserController.get(
   "/:id",
-  verifyJwtToken,
+  verifyLoginSession,
   async (
     req: express.Request,
     res: express.Response,
@@ -85,7 +85,7 @@ UserController.get(
       .createQueryBuilder()
       .select("user")
       .from(User, "user")
-      .where("user.id = :id", { id: parseInt(req.params.id) })
+      .where("user.id = :id", { id: parseInt(req.session.userId) })
       .leftJoinAndSelect("user.tasks", "task")
       .leftJoinAndSelect("user.teams", "team")
       .getOne();

@@ -3,7 +3,7 @@ import bodyParser = require("body-parser");
 import { UserController } from "./Users/User.controller";
 import { TasksController } from "./Tasks/Task.controller";
 import { TeamController } from "./Teams/Team.controller";
-import { verifyJwtToken } from "./middlewares/verifyJwtToken";
+import { verifyLoginSession } from "./middlewares/verifyLoginSession";
 
 const session = require("express-session");
 const redis = require("redis");
@@ -22,7 +22,7 @@ app.use(
       client: redisClient,
     }),
     cookie: {
-      maxAge: 10000 * 6,
+      maxAge: 10000 * 60,
     },
     saveUninitialized: false,
     resave: false,
@@ -30,7 +30,7 @@ app.use(
 );
 
 app.use("/users", UserController);
-app.use("/tasks", verifyJwtToken, TasksController);
-app.use("/teams", verifyJwtToken, TeamController);
+app.use("/tasks", verifyLoginSession, TasksController);
+app.use("/teams", verifyLoginSession, TeamController);
 
 export { app };
