@@ -5,6 +5,14 @@ export const verifyLoginSession = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
+  if (
+    req.method === "POST" &&
+    (req.path === "/users/signup" || req.path === "/users/signin")
+  ) {
+    console.log("signup/signin route");
+    return next();
+  }
+
   if (!req.session.alive) {
     return res
       .status(401)

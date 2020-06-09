@@ -28,9 +28,10 @@ app.use(
     resave: false,
   }),
 );
+app.use(verifyLoginSession);
 
 app.use("/users", UserController);
-app.use("/tasks", verifyLoginSession, TasksController);
-app.use("/teams", verifyLoginSession, TeamController);
+app.use("/tasks", TasksController);
+app.use("/teams", TeamController);
 
 export { app };
