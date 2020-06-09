@@ -42,7 +42,6 @@ UserController.post(
 
 UserController.post(
   "/signin",
-  validateDto(createUserDto),
   async (
     req: express.Request,
     res: express.Response,
@@ -61,22 +60,17 @@ UserController.post(
       return res.status(401).send();
     }
 
-    const accessToken = jwt.sign(
-      { userId: user.id, username: user.username },
-      process.env.JWT_SECRETKEY,
-      {
-        expiresIn: "6000s",
-      },
-    );
-    res.status(200).json({ accessToken: accessToken });
+    req.session.alive = true;
+
+    return res.status(200).send();
   },
 );
 
 UserController.get(
   "/signin",
-  verifyJwtToken,
   (req: express.Request, res: express.Response): express.Response => {
-    return res.status(200).send();
+    req.session.alive ? res.status(200) : res.status(401);
+    return res.send();
   },
 );
 
