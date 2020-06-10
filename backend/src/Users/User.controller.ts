@@ -1,9 +1,9 @@
 import express = require("express");
 import { validateDto } from "../middlewares/validateDto";
-import { createUserDto, signinDto } from "./User.dto";
+import { createUserDto, signinDto, updateUserDto } from "./User.dto";
 import bcrypt = require("bcryptjs");
-import { verifyLoginSession } from "../middlewares/verifyLoginSession";
 
+import { response } from "../interfaces/response.interface";
 import { User } from "./User.entity";
 import { getConnection } from "typeorm";
 
@@ -23,13 +23,11 @@ UserController.post(
     user.password = password;
     user.email = email;
     user.salt = await bcrypt.genSalt();
+
     try {
-      await user.save();
+      await saveUser(user);
     } catch (err) {
-      console.log(err);
-      if (err.code === "23505") {
-        return res.status(409).send("user already exists");
-      }
+      return res.status(409).send(err);
     }
 
     delete user.password;
@@ -99,5 +97,52 @@ UserController.get(
     return res.status(200).json(user);
   },
 );
+
+UserController.patch(
+  "/:id",
+  validateDto(updateUserDto),
+  async (req: express.Request, res: express.Response) => {
+    const user: User = await User.findOne({ id: parseInt(req.params.id) });
+
+    Object.keys(req.body).forEach(async (key) => {
+      if (key === "password") {
+        user.salt = await bcrypt.genSalt();
+        user.password = req.body[key];
+      } else {
+        user[key] = req.body[key];
+      }
+    });
+
+    try {
+      await saveUser(user);
+    } catch (err) {
+      return res.status(409).send(err);
+    }
+
+    delete user.password;
+    delete user.salt;
+
+    const patchedUserRes: response = {
+      data: user,
+    };
+    return res.status(200).send(patchedUserRes);
+  },
+);
+
+const saveUser = async (user: User): Promise<void> => {
+  try {
+    await user.save();
+  } catch (err) {
+    if (err.code === "23505") {
+      const duplicateKey = err.detail.match(/\((.*?)\)/)[1];
+      const errResponse: response = {
+        error: {
+          message: `${duplicateKey} already taken`,
+        },
+      };
+      throw errResponse;
+    }
+  }
+};
 
 export { UserController };
