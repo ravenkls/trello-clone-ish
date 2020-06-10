@@ -3,7 +3,7 @@ import { Task } from "./Task.entity";
 import { TaskStatus } from "./TaskStatus.enum";
 import { validateDto } from "../middlewares/validateDto";
 import { updateTaskDto, createTaskDto } from "./Task.dto";
-import { getConnection } from "typeorm";
+import { response } from "../interfaces/response.interface";
 import { User } from "../Users/User.entity";
 
 const TasksController: express.Router = express.Router();
@@ -28,7 +28,10 @@ TasksController.post(
     delete task.user.password;
     delete task.user.salt;
 
-    return res.status(201).json(task);
+    const createTaskRes: response = {
+      data: task,
+    };
+    return res.status(201).send(createTaskRes);
   },
 );
 
@@ -45,7 +48,10 @@ TasksController.get(
     delete task.user.password;
     delete task.user.salt;
 
-    return res.status(200).json(task);
+    const getTaskRes: response = {
+      data: task,
+    };
+    return res.status(200).send(getTaskRes);
   },
 );
 

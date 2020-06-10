@@ -33,7 +33,10 @@ UserController.post(
     delete user.password;
     delete user.salt;
 
-    return res.status(201).json(user);
+    const createdUserRes: response = {
+      data: user,
+    };
+    return res.status(201).send(createdUserRes);
   },
 );
 
@@ -94,7 +97,10 @@ UserController.get(
     delete user.password;
     delete user.salt;
 
-    return res.status(200).json(user);
+    const getUserRes: response = {
+      data: user,
+    };
+    return res.status(200).json(getUserRes);
   },
 );
 
