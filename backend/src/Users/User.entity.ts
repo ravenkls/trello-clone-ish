@@ -17,6 +17,7 @@ import { Team } from "../Teams/Team.entity";
 
 @Entity()
 @Unique(["username"])
+@Unique(["email"])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
