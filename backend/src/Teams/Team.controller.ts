@@ -8,7 +8,10 @@ const TeamController: express.Router = express.Router();
 
 TeamController.post(
   "/create",
-  async (req: express.Request, res: express.Response) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+  ): Promise<express.Response> => {
     const team = Team.create();
     team.teamname = req.body.teamname;
 

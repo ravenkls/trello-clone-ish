@@ -107,7 +107,10 @@ UserController.get(
 UserController.patch(
   "/:id",
   validateDto(updateUserDto),
-  async (req: express.Request, res: express.Response) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+  ): Promise<express.Response> => {
     const user: User = await User.findOne({ id: parseInt(req.params.id) });
 
     Object.keys(req.body).forEach(async (key) => {
