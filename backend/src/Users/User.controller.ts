@@ -3,9 +3,10 @@ import { validateDto } from "../middlewares/validateDto";
 import { createUserDto, signinDto, updateUserDto } from "./User.dto";
 import bcrypt = require("bcryptjs");
 
-import { response } from "../interfaces/response.interface";
 import { User } from "./User.entity";
 import { getConnection } from "typeorm";
+
+import { response } from "../utils/response.util";
 
 const UserController: express.Router = express.Router();
 
@@ -27,16 +28,13 @@ UserController.post(
     try {
       await saveUser(user);
     } catch (err) {
-      return res.status(409).send(err);
+      return response(res, 409, { success: false, error: { message: err } });
     }
 
     delete user.password;
     delete user.salt;
 
-    const createdUserRes: response = {
-      data: user,
-    };
-    return res.status(201).send(createdUserRes);
+    return response(res, 201, { success: true, data: user });
   },
 );
 
@@ -51,27 +49,33 @@ UserController.post(
 
     const user = await User.findOne({ username: username });
     if (!user) {
-      return res.status(401).send();
+      return response(res, 401, {
+        success: false,
+        error: { message: "Invalid credentials" },
+      });
     }
 
     const passwordValid = Boolean(
       (await bcrypt.hash(password, user.salt)) === user.password,
     );
     if (!passwordValid) {
-      return res.status(401).send();
+      return response(res, 401, {
+        success: false,
+        error: { message: "Invalid credentials" },
+      });
     }
 
     req.session.alive = true;
     req.session.userId = user.id;
 
-    return res.status(200).send();
+    return response(res, 200, { success: true, data: {} });
   },
 );
 
 UserController.get(
   "/signin",
   (req: express.Request, res: express.Response): express.Response => {
-    return res.status(200).send();
+    return response(res, 200, { success: true, data: {} });
   },
 );
 
@@ -97,10 +101,7 @@ UserController.get(
     delete user.password;
     delete user.salt;
 
-    const getUserRes: response = {
-      data: user,
-    };
-    return res.status(200).json(getUserRes);
+    return response(res, 200, { success: true, data: user });
   },
 );
 
@@ -131,10 +132,7 @@ UserController.patch(
     delete user.password;
     delete user.salt;
 
-    const patchedUserRes: response = {
-      data: user,
-    };
-    return res.status(200).send(patchedUserRes);
+    return response(res, 200, { success: true, data: user });
   },
 );
 
@@ -144,12 +142,7 @@ const saveUser = async (user: User): Promise<void> => {
   } catch (err) {
     if (err.code === "23505") {
       const duplicateKey = err.detail.match(/\((.*?)\)/)[1];
-      const errResponse: response = {
-        error: {
-          message: `${duplicateKey} already taken`,
-        },
-      };
-      throw errResponse;
+      throw `${duplicateKey} already taken`;
     }
   }
 };

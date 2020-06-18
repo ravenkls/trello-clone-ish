@@ -2,7 +2,7 @@ import express = require("express");
 import { Team } from "./Team.entity";
 import { User } from "../Users/User.entity";
 import { getConnection } from "typeorm";
-import { response } from "../interfaces/response.interface";
+import { response } from "../utils/response.util";
 
 const TeamController: express.Router = express.Router();
 
@@ -33,21 +33,19 @@ TeamController.post(
       await team.save();
     } catch (err) {
       if (err.code === "23505") {
-        const errRes: response = {
-          error: {
-            message: "team name already taken",
-          },
-        };
-        return res.status(409).send(errRes);
+        return response(res, 409, {
+          success: false,
+          error: { message: "team name already taken" },
+        });
       }
     }
 
     await user.save();
 
-    const createTeamRes: response = {
+    return response(res, 201, {
+      success: true,
       data: team,
-    };
-    return res.status(201).send(createTeamRes);
+    });
   },
 );
 

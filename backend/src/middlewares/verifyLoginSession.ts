@@ -1,22 +1,22 @@
 import express = require("express");
-
+import { response } from "../utils/response.util";
 export const verifyLoginSession = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,
 ) => {
   if (
-    req.method === "POST" &&
+    (req.method === "POST" || req.method === "OPTIONS") &&
     (req.path === "/users/signup" || req.path === "/users/signin")
   ) {
-    console.log("signup/signin route");
     return next();
   }
 
   if (!req.session.alive) {
-    return res
-      .status(401)
-      .send("Your login session has expired, please login again");
+    return response(res, 401, {
+      success: false,
+      error: { message: "Login session expired, please login again" },
+    });
   }
 
   next();

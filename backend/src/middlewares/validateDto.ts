@@ -1,5 +1,6 @@
 import express = require("express");
 import Joi = require("@hapi/joi");
+import { response } from "../utils/response.util";
 
 // DTO must be curried into a returned arrow fn as express only accepts middleware with the req, res, next fn signature
 export const validateDto = (DTO: Joi.ObjectSchema) => {
@@ -13,7 +14,10 @@ export const validateDto = (DTO: Joi.ObjectSchema) => {
     });
 
     if (error) {
-      return res.status(400).send();
+      return response(res, 400, {
+        success: false,
+        error: { message: "malformed request body" },
+      });
     }
 
     next();

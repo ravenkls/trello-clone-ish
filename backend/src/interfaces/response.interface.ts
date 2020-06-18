@@ -1,6 +1,17 @@
-export interface response {
-  error?: {
+export type responseInterface =
+  | errorResponseInterface
+  | successResponseInterface;
+
+interface errorResponseInterface extends baseResponseInterface {
+  error: {
     message: string | string[];
   };
-  data?: any;
+}
+
+interface successResponseInterface extends baseResponseInterface {
+  data: any;
+}
+
+interface baseResponseInterface {
+  success: boolean;
 }

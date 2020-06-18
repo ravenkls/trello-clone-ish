@@ -2,9 +2,9 @@ import express from "express";
 import { Task } from "./Task.entity";
 import { TaskStatus } from "./TaskStatus.enum";
 import { validateDto } from "../middlewares/validateDto";
-import { updateTaskDto, createTaskDto } from "./Task.dto";
-import { response } from "../interfaces/response.interface";
+import { createTaskDto } from "./Task.dto";
 import { User } from "../Users/User.entity";
+import { response } from "../utils/response.util";
 
 const TasksController: express.Router = express.Router();
 
@@ -28,10 +28,7 @@ TasksController.post(
     delete task.user.password;
     delete task.user.salt;
 
-    const createTaskRes: response = {
-      data: task,
-    };
-    return res.status(201).send(createTaskRes);
+    return response(res, 201, { success: true, data: task });
   },
 );
 
@@ -48,10 +45,10 @@ TasksController.get(
     delete task.user.password;
     delete task.user.salt;
 
-    const getTaskRes: response = {
+    return response(res, 200, {
+      success: true,
       data: task,
-    };
-    return res.status(200).send(getTaskRes);
+    });
   },
 );
 
