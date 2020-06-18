@@ -7,6 +7,7 @@ import { User } from "./User.entity";
 import { getConnection } from "typeorm";
 
 import { response } from "../utils/response.util";
+import { saveUser, getUserInfoById } from "./User.db-operations";
 
 const UserController: express.Router = express.Router();
 
@@ -80,19 +81,23 @@ UserController.get(
 );
 
 UserController.get(
+  "/me",
+  async (
+    req: express.Request,
+    res: express.Response,
+  ): Promise<express.Response> => {
+    const user: User = await getUserInfoById(req.session.userId);
+    return response(res, 200, { success: true, data: { user: user } });
+  },
+);
+
+UserController.get(
   "/:id",
   async (
     req: express.Request,
     res: express.Response,
   ): Promise<express.Response> => {
-    const user: User = await getConnection()
-      .createQueryBuilder()
-      .select("user")
-      .from(User, "user")
-      .where("user.id = :id", { id: parseInt(req.params.id) })
-      .leftJoinAndSelect("user.tasks", "task")
-      .leftJoinAndSelect("user.teams", "team")
-      .getOne();
+    const user: User = await getUserInfoById(parseInt(req.params.id));
 
     if (!user) {
       return response(res, 404, {
@@ -138,16 +143,5 @@ UserController.patch(
     return response(res, 200, { success: true, data: user });
   },
 );
-
-const saveUser = async (user: User): Promise<void> => {
-  try {
-    await user.save();
-  } catch (err) {
-    if (err.code === "23505") {
-      const duplicateKey = err.detail.match(/\((.*?)\)/)[1];
-      throw `${duplicateKey} already taken`;
-    }
-  }
-};
 
 export { UserController };
