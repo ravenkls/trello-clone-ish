@@ -4,6 +4,7 @@ import { UserController } from "./Users/User.controller";
 import { TasksController } from "./Tasks/Task.controller";
 import { TeamController } from "./Teams/Team.controller";
 import { verifyLoginSession } from "./middlewares/verifyLoginSession";
+import { response } from "./utils/response.util";
 
 const session = require("express-session");
 const redis = require("redis");
@@ -45,5 +46,31 @@ app.use(verifyLoginSession);
 app.use("/users", UserController);
 app.use("/tasks", TasksController);
 app.use("/teams", TeamController);
+
+app.use(
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    next({ status: 404 });
+  },
+);
+
+app.use(
+  (
+    error: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    if (error.status === 404) {
+      return response(res, 404, {
+        success: false,
+        error: { message: "Not found" },
+      });
+    }
+    return response(res, 500, {
+      success: false,
+      error: { message: "Sorry, something went wrong on our end :(" },
+    });
+  },
+);
 
 export { app };
