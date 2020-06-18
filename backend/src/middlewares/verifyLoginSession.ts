@@ -13,10 +13,7 @@ export const verifyLoginSession = async (
   }
 
   if (!req.session.alive) {
-    return response(res, 401, {
-      success: false,
-      error: { message: "Login session expired, please login again" },
-    });
+    return res.redirect(301, `${process.env.FRONTEND_HOST}/login`);
   }
 
   next();
