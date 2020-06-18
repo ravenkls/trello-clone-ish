@@ -13,7 +13,10 @@ export const verifyLoginSession = async (
   }
 
   if (!req.session.alive) {
-    return res.redirect(301, `${process.env.FRONTEND_HOST}/login`);
+    return response(res, 401, {
+      success: false,
+      error: { message: "Invalid login session, please login" },
+    });
   }
 
   next();
