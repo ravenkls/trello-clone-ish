@@ -89,13 +89,16 @@ UserController.get(
       .createQueryBuilder()
       .select("user")
       .from(User, "user")
-      .where("user.id = :id", { id: parseInt(req.session.userId) })
+      .where("user.id = :id", { id: parseInt(req.params.id) })
       .leftJoinAndSelect("user.tasks", "task")
       .leftJoinAndSelect("user.teams", "team")
       .getOne();
 
     if (!user) {
-      return res.status(404).send();
+      return response(res, 404, {
+        success: false,
+        error: { message: `could not find user with id ${req.params.id}` },
+      });
     }
 
     delete user.password;
