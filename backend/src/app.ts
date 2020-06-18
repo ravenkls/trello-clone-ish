@@ -12,7 +12,20 @@ const redisStore = require("connect-redis")(session);
 
 const app: express.Application = express();
 
+// ENABLE CORS REQUESTS
+app.use(function (req, res, next) {
+  console.log(req.headers.origin);
+  res.set("Access-Control-Allow-Origin", process.env.FRONTEND_HOST);
+  res.set("Access-Control-Allow-Credentials", "true");
+  res.set(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept",
+  );
+  next();
+});
+
 app.use(bodyParser.json());
+
 app.use(
   session({
     secret: process.env.REDIS_SECRETKEY,
@@ -20,14 +33,13 @@ app.use(
       host: process.env.REDIS_HOST,
       port: process.env.REDIS_PORT,
       client: redisClient,
+      ttl: 60,
     }),
-    cookie: {
-      maxAge: 10000 * 60,
-    },
     saveUninitialized: false,
     resave: false,
   }),
 );
+
 app.use(verifyLoginSession);
 
 app.use("/users", UserController);
