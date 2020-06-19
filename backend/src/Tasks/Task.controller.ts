@@ -38,7 +38,7 @@ TasksController.get(
     req: express.Request,
     res: express.Response,
   ): Promise<express.Response> => {
-    const task: Task = await Task.findOne({ id: parseInt(req.session.userId) });
+    const task: Task = await Task.findOne({ id: req.session.userId });
     if (!task) {
       return res.status(404).send();
     }
