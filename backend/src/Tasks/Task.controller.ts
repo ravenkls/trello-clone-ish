@@ -9,7 +9,7 @@ import { response } from "../utils/response.util";
 const TasksController: express.Router = express.Router();
 
 TasksController.post(
-  "/create",
+  "/",
   validateDto(createTaskDto),
   async (
     req: express.Request,
