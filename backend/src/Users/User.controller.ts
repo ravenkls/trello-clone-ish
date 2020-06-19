@@ -87,6 +87,9 @@ UserController.get(
     res: express.Response,
   ): Promise<express.Response> => {
     const user: User = await getUserInfoById(req.session.userId);
+
+    delete user.password;
+    delete user.salt;
     return response(res, 200, { success: true, data: { user: user } });
   },
 );
