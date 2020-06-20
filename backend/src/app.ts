@@ -39,7 +39,7 @@ app.use(
       host: process.env.REDIS_HOST,
       port: process.env.REDIS_PORT,
       client: redisClient,
-      ttl: 60,
+      ttl: 600,
     }),
     saveUninitialized: false,
     resave: false,
@@ -68,12 +68,12 @@ app.use(
     if (error.status === 404) {
       return response(res, 404, {
         success: false,
-        error: { message: "Not found" },
+        errors: [{ message: "Not found" }],
       });
     }
     return response(res, 500, {
       success: false,
-      error: { message: "Sorry, something went wrong on our end :(" },
+      errors: [{ message: "Sorry, something went wrong on our end :(" }],
     });
   },
 );

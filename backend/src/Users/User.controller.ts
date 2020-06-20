@@ -4,7 +4,6 @@ import { createUserDto, signinDto, updateUserDto } from "./User.dto";
 import bcrypt = require("bcryptjs");
 
 import { User } from "./User.entity";
-import { getConnection } from "typeorm";
 
 import { response } from "../utils/response.util";
 import { saveUser, getUserInfoById } from "./User.db-operations";
@@ -29,13 +28,13 @@ UserController.post(
     try {
       await saveUser(user);
     } catch (err) {
-      return response(res, 409, { success: false, error: { message: err } });
+      return response(res, 409, { success: false, errors: [{ message: err }] });
     }
 
     delete user.password;
     delete user.salt;
 
-    return response(res, 201, { success: true, data: user });
+    return response(res, 201, { success: true, data: [user] });
   },
 );
 
@@ -52,7 +51,7 @@ UserController.post(
     if (!user) {
       return response(res, 401, {
         success: false,
-        error: { message: "Invalid credentials" },
+        errors: [{ message: "Invalid credentials" }],
       });
     }
 
@@ -62,21 +61,21 @@ UserController.post(
     if (!passwordValid) {
       return response(res, 401, {
         success: false,
-        error: { message: "Invalid credentials" },
+        errors: [{ message: "Invalid credentials" }],
       });
     }
 
     req.session.alive = true;
     req.session.userId = user.id;
 
-    return response(res, 200, { success: true, data: {} });
+    return response(res, 200, { success: true });
   },
 );
 
 UserController.get(
   "/signin",
   (req: express.Request, res: express.Response): express.Response => {
-    return response(res, 200, { success: true, data: {} });
+    return response(res, 200, { success: true });
   },
 );
 
@@ -90,7 +89,7 @@ UserController.get(
 
     delete user.password;
     delete user.salt;
-    return response(res, 200, { success: true, data: { user: user } });
+    return response(res, 200, { success: true, data: [user] });
   },
 );
 
@@ -105,14 +104,14 @@ UserController.get(
     if (!user) {
       return response(res, 404, {
         success: false,
-        error: { message: `could not find user with id ${req.params.id}` },
+        errors: [{ message: `could not find user with id ${req.params.id}` }],
       });
     }
 
     delete user.password;
     delete user.salt;
 
-    return response(res, 200, { success: true, data: user });
+    return response(res, 200, { success: true, data: [user] });
   },
 );
 
@@ -143,7 +142,7 @@ UserController.patch(
     delete user.password;
     delete user.salt;
 
-    return response(res, 200, { success: true, data: user });
+    return response(res, 200, { success: true, data: [user] });
   },
 );
 

@@ -3,13 +3,11 @@ export type responseInterface =
   | successResponseInterface;
 
 interface errorResponseInterface extends baseResponseInterface {
-  error: {
-    message: string | string[];
-  };
+  errors: { message: string }[];
 }
 
 interface successResponseInterface extends baseResponseInterface {
-  data: any;
+  data?: any[];
 }
 
 interface baseResponseInterface {

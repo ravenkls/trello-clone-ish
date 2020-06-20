@@ -17,7 +17,6 @@ TasksController.post(
   ): Promise<express.Response> => {
     const task: Task = Task.create();
 
-    console.log(req.session);
     task.title = req.body.title;
     task.description = req.body.description;
     task.status = TaskStatus.OPEN;
@@ -28,7 +27,7 @@ TasksController.post(
     delete task.user.password;
     delete task.user.salt;
 
-    return response(res, 201, { success: true, data: task });
+    return response(res, 201, { success: true, data: [task] });
   },
 );
 
@@ -47,7 +46,7 @@ TasksController.get(
 
     return response(res, 200, {
       success: true,
-      data: task,
+      data: [task],
     });
   },
 );

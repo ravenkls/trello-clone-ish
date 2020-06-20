@@ -16,7 +16,7 @@ export const validateDto = (DTO: Joi.ObjectSchema) => {
     if (error) {
       return response(res, 400, {
         success: false,
-        error: { message: "malformed request body" },
+        errors: [{ message: "malformed request body" }],
       });
     }
 

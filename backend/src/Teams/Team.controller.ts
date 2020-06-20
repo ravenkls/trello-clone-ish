@@ -35,7 +35,7 @@ TeamController.post(
       if (err.code === "23505") {
         return response(res, 409, {
           success: false,
-          error: { message: "team name already taken" },
+          errors: [{ message: "team name already taken" }],
         });
       }
     }
@@ -44,7 +44,7 @@ TeamController.post(
 
     return response(res, 201, {
       success: true,
-      data: team,
+      data: [team],
     });
   },
 );

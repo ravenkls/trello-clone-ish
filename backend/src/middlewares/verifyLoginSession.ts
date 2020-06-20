@@ -15,7 +15,7 @@ export const verifyLoginSession = async (
   if (!req.session.alive) {
     return response(res, 401, {
       success: false,
-      error: { message: "Invalid login session, please login" },
+      errors: [{ message: "Invalid login session, please login" }],
     });
   }
 
