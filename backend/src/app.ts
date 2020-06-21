@@ -5,6 +5,7 @@ import { TasksController } from "./Tasks/Task.controller";
 import { TeamController } from "./Teams/Team.controller";
 import { verifyLoginSession } from "./middlewares/verifyLoginSession";
 import { response } from "./utils/response.util";
+import { asyncMiddlewareWrapper } from "./utils/asyncMiddlewareWraper.util";
 
 const session = require("express-session");
 const redis = require("redis");
@@ -46,18 +47,16 @@ app.use(
   }),
 );
 
-app.use(verifyLoginSession);
+app.use(asyncMiddlewareWrapper(verifyLoginSession));
 
 app.use("/users", UserController);
 app.use("/tasks", TasksController);
 app.use("/teams", TeamController);
-
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     next({ status: 404 });
   },
 );
-
 app.use(
   (
     error: any,
@@ -65,6 +64,7 @@ app.use(
     res: express.Response,
     next: express.NextFunction,
   ): express.Response => {
+    console.log(error);
     if (error.status === 404) {
       return response(res, 404, {
         success: false,
