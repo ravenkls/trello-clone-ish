@@ -1,5 +1,5 @@
 import express = require("express");
-import { validateDto } from "../middlewares/validateDto";
+import { generateValidateDtoMiddleware } from "../middlewares/generateValidateDtoMiddleware";
 import { createUserDto, signinDto, updateUserDto } from "./User.dto";
 import bcrypt = require("bcryptjs");
 
@@ -13,7 +13,7 @@ const UserController: express.Router = express.Router();
 
 UserController.post(
   "/signup",
-  validateDto(createUserDto),
+  generateValidateDtoMiddleware(createUserDto),
   asyncMiddlewareWrapper(
     async (
       req: express.Request,
@@ -46,7 +46,7 @@ UserController.post(
 
 UserController.post(
   "/signin",
-  validateDto(signinDto),
+  generateValidateDtoMiddleware(signinDto),
   asyncMiddlewareWrapper(
     async (
       req: express.Request,
@@ -129,7 +129,7 @@ UserController.get(
 
 UserController.patch(
   "/:id",
-  validateDto(updateUserDto),
+  generateValidateDtoMiddleware(updateUserDto),
   asyncMiddlewareWrapper(
     async (
       req: express.Request,

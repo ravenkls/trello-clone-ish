@@ -1,7 +1,7 @@
 import express from "express";
 import { Task } from "./Task.entity";
 import { TaskStatus } from "./TaskStatus.enum";
-import { validateDto } from "../middlewares/validateDto";
+import { generateValidateDtoMiddleware } from "../middlewares/generateValidateDtoMiddleware";
 import { createTaskDto } from "./Task.dto";
 import { User } from "../Users/User.entity";
 import { response } from "../utils/response.util";
@@ -11,7 +11,7 @@ const TasksController: express.Router = express.Router();
 
 TasksController.post(
   "/",
-  validateDto(createTaskDto),
+  generateValidateDtoMiddleware(createTaskDto),
   asyncMiddlewareWrapper(
     async (
       req: express.Request,

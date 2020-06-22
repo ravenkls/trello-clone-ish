@@ -1,3 +1,0 @@
-afterAll(() => {
-  jest.clearAllMocks();
-});
