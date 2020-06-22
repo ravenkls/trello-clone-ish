@@ -7,11 +7,24 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - 5432:5432
+
   redis:
     image: "bitnami/redis:latest"
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
+    hostname: redis
+
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/usr/src/app
     ports:
-      - 6379:6379
+      - 1234:1234
+  
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - 3000:3000
+    stdin_open: true

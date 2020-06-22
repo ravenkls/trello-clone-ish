@@ -21,25 +21,13 @@ Getting up and running:
 1. Install node modules for frontend and backend:
 
 ```bash
-cd ./backend && yarn install && cd ../frontend & yarn install
+cd ./backend && yarn install && cd ../frontend & yarn install & cd ..
 ```
 
-2. Start up neccessary 3rd party services (postgres on `localhost:5432` and redis on `localhost:6379`):
+2. Start up the docker containers
 
 ```bash
-cd ./backend/composure && docker-compose up
+docker-compose up -d
 ```
 
-3. Start up backend express server (in dev mode, this just uses certain env vars from prod mode), this will start up an express server on `localhost:1234`:
-
-```bash
-cd ./backend && yarn start:dev
-```
-
-4. Start up frontend react app, this will run on `localhost:3000`
-
-```bash
-cd ./frontend && yarn start
-```
-
-Alright, you should be good to go now
+Alright, you should be good to go now. You can view the website @ http://localhost:3000

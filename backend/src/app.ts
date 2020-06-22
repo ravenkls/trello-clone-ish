@@ -6,10 +6,11 @@ import { TeamController } from "./Teams/Team.controller";
 import { verifyLoginSession } from "./middlewares/verifyLoginSession";
 import { response } from "./utils/response.util";
 import { asyncMiddlewareWrapper } from "./utils/asyncMiddlewareWraper.util";
+import { AdvancedConsoleLogger } from "typeorm";
 
 const session = require("express-session");
 const redis = require("redis");
-const redisClient = redis.createClient();
+const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
 const redisStore = require("connect-redis")(session);
 
 const app: express.Application = express();
