@@ -1,6 +1,6 @@
 import express = require("express");
 import Joi = require("@hapi/joi");
-import { response } from "../utils/response.util";
+import { response } from "../utils/response-util";
 
 // DTO must be curried into a returned arrow fn as express only accepts middleware with the req, res, next fn signature
 export const generateValidateDtoMiddleware = (DTO: Joi.ObjectSchema) => {

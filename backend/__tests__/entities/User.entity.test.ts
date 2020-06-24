@@ -1,4 +1,4 @@
-import { User } from "../../src/Users/User.entity";
+import { User } from "../../src/Users/User-entity";
 import bcrypt = require("bcryptjs");
 
 describe("hashPassword()", () => {

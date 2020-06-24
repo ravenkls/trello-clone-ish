@@ -1,5 +1,5 @@
 import express = require("express");
-import { response } from "../utils/response.util";
+import { response } from "../utils/response-util";
 export const verifyLoginSession = async (
   req: express.Request,
   res: express.Response,

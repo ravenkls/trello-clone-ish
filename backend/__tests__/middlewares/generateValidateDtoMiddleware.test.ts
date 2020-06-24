@@ -2,7 +2,7 @@ import { generateValidateDtoMiddleware } from "../../src/middlewares/generateVal
 import Joi = require("@hapi/joi");
 import { mockResponse, mockNextFn } from "../mocks";
 
-import { response } from "../../src/utils/response.util";
+import { response } from "../../src/utils/response-util";
 jest.mock("../../src/utils/response.util");
 const usernameAndEmailDTO: Joi.ObjectSchema = Joi.object({
   username: Joi.string().required(),

@@ -30,7 +30,7 @@
     "typeorm": "0.2.24"
   },
   "scripts": {
-    "start:dev": "NODE_ENV=development nodemon --exec ts-node src/startServer.ts --legacy-watch",
+    "start:dev": "NODE_ENV=development nodemon --exec ts-node src/startServer.ts",
     "build": "tsc",
     "start:prod": "yarn build && NODE_ENV=development node ./build/src/startServer.js",
     "test": "NODE_ENV=development jest"

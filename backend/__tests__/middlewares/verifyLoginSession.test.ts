@@ -1,7 +1,7 @@
 import { verifyLoginSession } from "../../src/middlewares/verifyLoginSession";
 import { mockResponse, mockNextFn } from "../mocks";
 
-import { response } from "../../src/utils/response.util";
+import { response } from "../../src/utils/response-util";
 jest.mock("../../src/utils/response.util");
 
 describe("verifyLoginSession()", () => {

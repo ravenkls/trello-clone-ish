@@ -1,4 +1,4 @@
-import { response } from "../../src/utils/response.util";
+import { response } from "../../src/utils/response-util";
 
 describe("Inputting express response, status code and response JSON", () => {
   const responseJSON: any = { foo: "bar" };
